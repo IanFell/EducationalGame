@@ -3,7 +3,9 @@ package com.mygdx.taiwo;
 import com.badlogic.gdx.Game;
 
 import questions.Questions;
-import render.Render;;
+import render.Render;
+import screens.GameScreen;
+import subjects.Subjects;
 
 /**
  * This is a game made for school students, coded by Fabulous Fellini
@@ -14,14 +16,18 @@ import render.Render;;
  */
 public class TaiwoGame extends Game {
 	
-	/**
+	/** 
 	 * Game renderer.
 	 */
-	public Render renderer = new Render();
+	private Render renderer = new Render();
+	
+	private Subjects subject   = new Subjects();
+	private Questions question = new Questions();
 	
 	@Override
 	public void create () {
-	
+		subject.setCurrentSubject(Subjects.SUBJECT_BUS);
+		this.setScreen(new GameScreen());
 	}
 
 	@Override
@@ -31,7 +37,10 @@ public class TaiwoGame extends Game {
 	}
 	
 	private void gameLoop() {
-		System.out.print("Taiwo game in the gamme loop!");
+		System.out.println("Taiwo game in the game loop!");
+		int currentSubject = subject.getCurrentSubject();
+		System.out.println("Current subject: " + currentSubject);
+		System.out.println("Current questions: " + question.getCurrentQuestionBasedOnCurrentSubject(currentSubject));
 	}
 	
 	@Override
