@@ -110,4 +110,13 @@ public class Answers {
 			"Wait for food to arrive",
 			"Consume food"
 	};
+	
+	private String[][] answers = {
+			busAnswers,
+			shoeAnswers
+	};
+
+	public String[][] getAnswers() {
+		return answers;
+	}
 }

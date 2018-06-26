@@ -1,5 +1,7 @@
 package questions;
 
+import answers.Answers;
+
 /**
  * 
  * @author Taiwo / Fabulous Fellini
@@ -32,6 +34,12 @@ public class Questions {
 			SUBJECT_ORDER_FOOD_FROM_FAST_FOOD_RESTAURANT,
 			SUBJECT_PAY_BILL_AT_SIT_DOWN_RESTAURANT
 	};  
+	
+	private Answers answer = new Answers();
+	
+	public Answers getAnswer() {
+		return answer;
+	}
 
 	public String getCurrentQuestionBasedOnCurrentSubject(int currentSubject) {
 		return questions[currentSubject];
