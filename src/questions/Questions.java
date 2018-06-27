@@ -18,8 +18,8 @@ public class Questions {
 	public static final String SUBJECT_WASHING_HANDS_AT_HOME                = "What are the steps to wash your hands at home?";
 	public static final String SUBJECT_WASHING_HAIR                         = "What are the steps to wash your hair?";
 	public static final String SUBJECT_ORDER_FOOD_FROM_SIT_DOWN_RESTAURANT  = "What are the steps to order food from a sit down restaruant?";
-	public static final String SUBJECT_ORDER_FOOD_FROM_FAST_FOOD_RESTAURANT = "What are the steps to order food from a fast food restaruant?";
 	public static final String SUBJECT_PAY_BILL_AT_SIT_DOWN_RESTAURANT      = "What are the steps to pay the bill at a fast food restaruant?";
+	public static final String SUBJECT_ORDER_FOOD_FROM_FAST_FOOD_RESTAURANT = "What are the steps to order food from a fast food restaruant?";
 	
 	private String[] questions = {
 			QUESTION_BUS,
@@ -31,8 +31,8 @@ public class Questions {
 			SUBJECT_WASHING_HANDS_AT_HOME,
 			SUBJECT_WASHING_HAIR,
 			SUBJECT_ORDER_FOOD_FROM_SIT_DOWN_RESTAURANT,
+			SUBJECT_PAY_BILL_AT_SIT_DOWN_RESTAURANT,
 			SUBJECT_ORDER_FOOD_FROM_FAST_FOOD_RESTAURANT,
-			SUBJECT_PAY_BILL_AT_SIT_DOWN_RESTAURANT
 	};  
 	
 	private Answers answer = new Answers();

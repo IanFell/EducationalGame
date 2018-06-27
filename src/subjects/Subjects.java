@@ -18,8 +18,8 @@ public class Subjects {
 	public static final int SUBJECT_WASHING_HANDS_AT_HOME                = 6;
 	public static final int SUBJECT_WASHING_HAIR                         = 7;
 	public static final int SUBJECT_ORDER_FOOD_FROM_SIT_DOWN_RESTAURANT  = 8;
-	public static final int SUBJECT_ORDER_FOOD_FROM_FAST_FOOD_RESTAURANT = 9;
-	public static final int SUBJECT_PAY_BILL_AT_SIT_DOWN_RESTAURANT      = 10;
+	public static final int SUBJECT_PAY_BILL_AT_SIT_DOWN_RESTAURANT      = 9;
+	public static final int SUBJECT_ORDER_FOOD_FROM_FAST_FOOD_RESTAURANT = 10;
 	
 	private int currentSubject;
 	

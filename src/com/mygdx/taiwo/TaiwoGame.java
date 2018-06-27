@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 
 import render.Render;
 import screens.GameScreen;
-import subjects.Subjects;
 
 /**
  * This is a game made for school students, coded by Fabulous Fellini
@@ -20,11 +19,8 @@ public class TaiwoGame extends Game {
 	 */
 	private Render renderer = new Render();
 	
-	private Subjects subject   = new Subjects();
-	
 	@Override
 	public void create () {
-		subject.setCurrentSubject(Subjects.SUBJECT_BUS);
 		this.setScreen(new GameScreen());
 	}
 
@@ -36,10 +32,6 @@ public class TaiwoGame extends Game {
 	
 	private void gameLoop() {
 		System.out.println("Taiwo game in the game loop!");
-		int currentSubject = subject.getCurrentSubject();
-		System.out.println("Current subject: " + currentSubject);
-		System.out.println("Current question: " + subject.getQuestion().getCurrentQuestionBasedOnCurrentSubject(currentSubject));
-		System.out.println("Current answers: " + subject.getQuestion().getAnswer().getAnswers());
 	}
 	
 	@Override

@@ -111,9 +111,45 @@ public class Answers {
 			"Consume food"
 	};
 	
-	private String[][] answers = {
+	private final String[] payBillFromSitDownRestarantAnswers = {
+			"Finish eating",
+			"Wait for waiter or waitress to visit your table",
+			"Ask for check",
+			"Wait for waiter or waitress to arrive with check",
+			"Choose desired form of payment",
+			"Place desired form of payment with check",
+			"Wait for waiter or waitress to pick up check from your table",
+			"Wait for waiter or waitress to return with check",
+			"Leave tip (15% - 20%)",
+			"If payment is with credit or debit card, sign check" 
+	};
+	
+	private final String[] orderFoodFromFastFoodRestarantAnswers = {
+			"Go to desired restaurant",
+			"Wait for cashier to welcome you",
+			"Review the menu",
+			"Decide what you would like to order",
+			"Tell cashier what you would like to order",
+			"Let cashier tell you the total",
+			"Give cashier form of payment",
+			"Check change is correct",
+			"Wait for food to arrive",
+			"Consume food" 
+	};
+	
+	public String[][] answers = {
 			busAnswers,
-			shoeAnswers
+			shoeAnswers,
+			brushingTeethAnswers,
+			laundryAnswers,
+			dryerAnswers,
+			crossingStreetAtStopSignAnswers,
+			crossingStreetAtStopLightAnswers,
+			washingHandsAtHomeAnswers,
+			washingHairAnswers,
+			orderFoodFromSitDownRestarantAnswers,
+			payBillFromSitDownRestarantAnswers,
+			orderFoodFromFastFoodRestarantAnswers
 	};
 
 	public String[][] getAnswers() {
