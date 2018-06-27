@@ -26,20 +26,33 @@ public class Subjects {
 	private Questions question = new Questions();
 	
 	/**
-	 * Constructor.  Set subject to first subject.
+	 * Constructor.  
+	 * Set subject to initial subject.
 	 */
 	public Subjects() {
 		currentSubject = SUBJECT_BUS;
 	}
 
+	/**
+	 * 
+	 * @return int
+	 */
 	public int getCurrentSubject() {
 		return currentSubject;
 	}
 
+	/**
+	 * 
+	 * @param int currentSubject
+	 */
 	public void setCurrentSubject(int currentSubject) {
 		this.currentSubject = currentSubject;
 	}
 
+	/**
+	 * 
+	 * @return Questions
+	 */
 	public Questions getQuestion() {
 		return question;
 	}

@@ -37,10 +37,19 @@ public class Questions {
 	
 	private Answers answer = new Answers();
 	
+	/**
+	 * 
+	 * @return Answers
+	 */
 	public Answers getAnswer() {
 		return answer;
 	}
 
+	/**
+	 * 
+	 * @param int currentSubject
+	 * @return String
+	 */
 	public String getCurrentQuestionBasedOnCurrentSubject(int currentSubject) {
 		return questions[currentSubject];
 	}

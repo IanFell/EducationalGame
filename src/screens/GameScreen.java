@@ -16,14 +16,40 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import subjects.Subjects;
 import tests.Tests;
 
+/**
+ * 
+ * @author Taiwo / Fabulous Fellini
+ *
+ */
 public class GameScreen implements Screen {
-	private boolean buttonPressed = false;
+	
+	/**
+	 * Keeps track if button has been pressed.  
+	 * There is only one button.  This is only a comment until 
+	 * we actually begin coding the game.
+	 */
+	private boolean buttonPressed;
+	
+	/**
+	 * Has game screen been initialized?
+	 * At launch no.  After launch yes.
+	 */
+	private boolean hasBeenInitialized;
+	
+	/**
+	 * These are variables for the button.
+	 */
 	private Stage stage;
 	private Texture myTexture;
 	private TextureRegion myTextureRegion;
 	private TextureRegionDrawable myTexRegionDrawable;
 	private ImageButton button;
-	private boolean hasBeenInitialized = false;
+	
+	/**
+	 * In this class we only need a Subjects class. 
+	 * The Subjects class takes the Questions class.
+	 * The Questions class takes the Answers class.
+	 */
 	private Subjects subject = new Subjects();
 
 	@Override
@@ -34,32 +60,53 @@ public class GameScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		if (!hasBeenInitialized) {
-			subject.setCurrentSubject(Subjects.SUBJECT_BUS);
-			myTexture = new Texture(Gdx.files.internal("badlogic.jpg"));
-			myTextureRegion = new TextureRegion(myTexture);
-			myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
-			button = new ImageButton(myTexRegionDrawable); //Set the button up
-			stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
-			stage.addActor(button); //Add the button to the stage to perform rendering and take input.
-			Gdx.input.setInputProcessor(stage); //Start taking input from the ui
+			initializeGameScreen();
 			hasBeenInitialized = true;
 		}
 
+		/**
+		 * Handle input.
+		 * However, input is also handled by the ClickEvent Handler.
+		 * Somewhere we will have to set buttonPressed back to false after event is over.
+		 * Make a class to handle input, both keyboard and mouse.
+		 */
 		if (buttonPressed) {
 			Gdx.gl.glClearColor(0, .5f, .5f, 0);
 		} else {
 			Gdx.gl.glClearColor(0, 0, 0, 0);
 		}
 		
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
-		stage.draw(); //Draw the ui
-		
 		if(Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
 			Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
 		}
-
+		
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		// Perform UI logic.
+		stage.act(Gdx.graphics.getDeltaTime()); 
+		
+		// Draw the stage which contains the button.
+		stage.draw(); 
+	}
+	
+	private void initializeGameScreen() {
+		subject.setCurrentSubject(Subjects.SUBJECT_BUS);
+		buttonPressed      = false;
+		hasBeenInitialized = false;
+		initializeGui();
+	}
+	
+	private void initializeGui() {
+		myTexture           = new Texture(Gdx.files.internal("badlogic.jpg"));
+		myTextureRegion     = new TextureRegion(myTexture);
+		myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
+		button              = new ImageButton(myTexRegionDrawable); 
+		// Set up a stage for the UI.
+		stage               = new Stage(new ScreenViewport()); 
+		//Add the button to the stage to perform rendering and take input.
+		stage.addActor(button); 
+		Gdx.input.setInputProcessor(stage); //Start taking input from the ui
+		button.setPosition(Gdx.graphics.getWidth() / 2 - button.getWidth() / 2, Gdx.graphics.getHeight() / 2 - button.getHeight() / 2);
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -67,7 +114,6 @@ public class GameScreen implements Screen {
 				Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
 				buttonPressed = true;
 			}
-
 		});
 	}
 

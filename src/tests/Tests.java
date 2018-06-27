@@ -2,8 +2,18 @@ package tests;
 
 import subjects.Subjects;
 
+/**
+ * 
+ * @author Taiwo / Fabulous Fellini
+ *
+ */
 public class Tests {
 	
+	/**
+	 * 
+	 * @param Subjects subject
+	 * @param int      currentSubject
+	 */
 	public static void outputSubjectQuestionAndAnswers(Subjects subject, int currentSubject)
 	{
 		currentSubject = subject.getCurrentSubject();

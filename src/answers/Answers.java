@@ -152,6 +152,10 @@ public class Answers {
 			orderFoodFromFastFoodRestarantAnswers
 	};
 
+	/**
+	 * 
+	 * @return String[][]
+	 */
 	public String[][] getAnswers() {
 		return answers;
 	}
