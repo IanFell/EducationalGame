@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import input.InputHandler;
 import subjects.Subjects;
 import tests.Tests;
 
@@ -22,6 +23,8 @@ import tests.Tests;
  *
  */
 public class GameScreen implements Screen {
+	
+	private InputHandler inputHandler = new InputHandler();
 	
 	/**
 	 * Keeps track if button has been pressed.  
@@ -63,21 +66,13 @@ public class GameScreen implements Screen {
 			initializeGameScreen();
 			hasBeenInitialized = true;
 		}
+		//buttonPressed = false;
+		inputHandler.handleInput(subject);
 
-		/**
-		 * Handle input.
-		 * However, input is also handled by the ClickEvent Handler.
-		 * Somewhere we will have to set buttonPressed back to false after event is over.
-		 * Make a class to handle input, both keyboard and mouse.
-		 */
 		if (buttonPressed) {
 			Gdx.gl.glClearColor(0, .5f, .5f, 0);
 		} else {
 			Gdx.gl.glClearColor(0, 0, 0, 0);
-		}
-		
-		if(Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-			Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
 		}
 		
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -87,6 +82,8 @@ public class GameScreen implements Screen {
 		
 		// Draw the stage which contains the button.
 		stage.draw(); 
+		
+		System.out.println(buttonPressed);
 	}
 	
 	private void initializeGameScreen() {
@@ -113,6 +110,11 @@ public class GameScreen implements Screen {
 				System.out.println("Button pressed!");
 				Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
 				buttonPressed = true;
+			}
+			
+			@Override
+			public void touchDragged(InputEvent event, float x, float y, int pointer) {
+				button.setPosition(x, y);
 			}
 		});
 	}
