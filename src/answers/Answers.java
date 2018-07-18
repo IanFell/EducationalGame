@@ -13,7 +13,7 @@ public class Answers {
 			"Wait for the bus",
 			"Get on the bus",
 			"Take out money or bus card",
-			"Pay bus fair",
+			"Pay bus fare",
 			"Find a seat on the bus",
 			"Sit down on seat",
 			"Pay attention to your location so you do not miss your destination",

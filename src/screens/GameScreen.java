@@ -1,7 +1,8 @@
 package screens;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -27,13 +28,6 @@ public class GameScreen implements Screen {
 	private InputHandler inputHandler = new InputHandler();
 	
 	/**
-	 * Keeps track if button has been pressed.  
-	 * There is only one button.  This is only a comment until 
-	 * we actually begin coding the game.
-	 */
-	private boolean buttonPressed;
-	
-	/**
 	 * Has game screen been initialized?
 	 * At launch no.  After launch yes.
 	 */
@@ -43,10 +37,15 @@ public class GameScreen implements Screen {
 	 * These are variables for the button.
 	 */
 	private Stage stage;
-	private Texture myTexture;
-	private TextureRegion myTextureRegion;
-	private TextureRegionDrawable myTexRegionDrawable;
-	private ImageButton button;
+	private Texture subjectTexture;
+	private TextureRegion subjectTextureRegion;
+	private TextureRegionDrawable subjectTextureRegionDrawable;
+	private ImageButton subjectButton;  // change this to normal image
+	
+	private Texture[] answerTextures                             = new Texture[12];
+	private TextureRegion[] answerTextureRegions                 = new TextureRegion[12];
+	private TextureRegionDrawable[] answerTextureRegionsDrawable = new TextureRegionDrawable[12];
+	private ImageButton[] answerButtons                          = new ImageButton[12];
 	
 	/**
 	 * In this class we only need a Subjects class. 
@@ -66,57 +65,73 @@ public class GameScreen implements Screen {
 			initializeGameScreen();
 			hasBeenInitialized = true;
 		}
-		//buttonPressed = false;
-		inputHandler.handleInput(subject);
-
-		if (buttonPressed) {
-			Gdx.gl.glClearColor(0, .5f, .5f, 0);
-		} else {
-			Gdx.gl.glClearColor(0, 0, 0, 0);
-		}
 		
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClearColor(0.1f, 0.5f, 0.2f, 0);
+
+		inputHandler.handleInput(subject);
 		
 		// Perform UI logic.
 		stage.act(Gdx.graphics.getDeltaTime()); 
 		
 		// Draw the stage which contains the button.
 		stage.draw(); 
-		
-		System.out.println(buttonPressed);
 	}
 	
 	private void initializeGameScreen() {
 		subject.setCurrentSubject(Subjects.SUBJECT_BUS);
-		buttonPressed      = false;
 		hasBeenInitialized = false;
 		initializeGui();
 	}
 	
 	private void initializeGui() {
-		myTexture           = new Texture(Gdx.files.internal("badlogic.jpg"));
-		myTextureRegion     = new TextureRegion(myTexture);
-		myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
-		button              = new ImageButton(myTexRegionDrawable); 
-		// Set up a stage for the UI.
-		stage               = new Stage(new ScreenViewport()); 
-		//Add the button to the stage to perform rendering and take input.
-		stage.addActor(button); 
+		subjectTexture               = new Texture(Gdx.files.internal("Question.png"));
+		subjectTextureRegion         = new TextureRegion(subjectTexture);
+		subjectTextureRegionDrawable = new TextureRegionDrawable(subjectTextureRegion);
+		subjectButton                = new ImageButton(subjectTextureRegionDrawable); 
+		
+		answerTextures[0]  = new Texture(Gdx.files.internal("AnswerOne.png"));
+		answerTextures[1]  = new Texture(Gdx.files.internal("AnswerTwo.png"));
+		answerTextures[2]  = new Texture(Gdx.files.internal("AnswerThree.png"));
+		answerTextures[3]  = new Texture(Gdx.files.internal("AnswerFour.png"));
+		answerTextures[4]  = new Texture(Gdx.files.internal("AnswerFive.png"));
+		answerTextures[5]  = new Texture(Gdx.files.internal("AnswerSix.png"));
+		answerTextures[6]  = new Texture(Gdx.files.internal("AnswerSeven.png"));
+		answerTextures[7]  = new Texture(Gdx.files.internal("AnswerEight.png"));
+		answerTextures[8]  = new Texture(Gdx.files.internal("AnswerNine.png"));
+		answerTextures[9]  = new Texture(Gdx.files.internal("AnswerTen.png"));
+		answerTextures[10] = new Texture(Gdx.files.internal("AnswerEleven.png"));
+		answerTextures[11] = new Texture(Gdx.files.internal("AnswerTwelve.png"));
+		
+
+		stage = new Stage(new ScreenViewport()); 
 		Gdx.input.setInputProcessor(stage); //Start taking input from the ui
-		button.setPosition(Gdx.graphics.getWidth() / 2 - button.getWidth() / 2, Gdx.graphics.getHeight() / 2 - button.getHeight() / 2);
-		button.addListener(new ClickListener() {
+		
+		subjectButton.setPosition(Gdx.graphics.getWidth() / 2 - subjectButton.getWidth() / 2, Gdx.graphics.getHeight() - subjectButton.getHeight() * 1.5f);
+		subjectButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				System.out.println("Button pressed!");
+				System.out.println("Subject button pressed!");
 				Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
-				buttonPressed = true;
-			}
-			
-			@Override
-			public void touchDragged(InputEvent event, float x, float y, int pointer) {
-				button.setPosition(x, y);
 			}
 		});
+		
+		stage.addActor(subjectButton);
+		
+		Random random = new Random();
+		for (int i = 0; i < answerButtons.length; i++) {
+			answerTextureRegions[i] = new TextureRegion(answerTextures[i]);
+			answerTextureRegionsDrawable[i] = new TextureRegionDrawable(answerTextureRegions[i]);
+			answerButtons[i] = new ImageButton(answerTextureRegionsDrawable[i]);
+			answerButtons[i].setSize(answerButtons[i].getWidth() / 2, answerButtons[i].getHeight() / 2);
+			stage.addActor(answerButtons[i]);
+			answerButtons[i].setPosition(
+					random.nextInt((int)(stage.getWidth())), 
+					random.nextInt((int) stage.getHeight())
+					);
+			
+		}
+		setUpAnswerButtonClickListeners();
 	}
 
 	@Override
@@ -145,7 +160,172 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-
+		subjectTexture.dispose();
+		for (int i= 0; i < answerTextures.length; i++) {
+			answerTextures[i].dispose();
+		}
 	}
+
+		private void setUpAnswerButtonClickListeners() {
+			
+			answerButtons[0].addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					System.out.println("Button pressed!");
+					Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
+				}
+				
+				@Override
+				public void touchDragged(InputEvent event, float x, float y, int pointer) {
+					answerButtons[0].setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+				}
+			});
+			
+			answerButtons[1].addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					System.out.println("Button pressed!");
+					Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
+				}
+				
+				@Override
+				public void touchDragged(InputEvent event, float x, float y, int pointer) {
+					answerButtons[1].setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+				}
+			});
+			
+			answerButtons[2].addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					System.out.println("Button pressed!");
+					Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
+				}
+				
+				@Override
+				public void touchDragged(InputEvent event, float x, float y, int pointer) {
+					answerButtons[2].setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+				}
+			});
+			
+			answerButtons[3].addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					System.out.println("Button pressed!");
+					Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
+				}
+				
+				@Override
+				public void touchDragged(InputEvent event, float x, float y, int pointer) {
+					answerButtons[3].setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+				}
+			});
+			
+			answerButtons[4].addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					System.out.println("Button pressed!");
+					Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
+				}
+				
+				@Override
+				public void touchDragged(InputEvent event, float x, float y, int pointer) {
+					answerButtons[4].setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+				}
+			});
+			
+			
+			answerButtons[5].addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					System.out.println("Button pressed!");
+					Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
+				}
+				
+				@Override
+				public void touchDragged(InputEvent event, float x, float y, int pointer) {
+					answerButtons[5].setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+				}
+			});
+			
+			
+			answerButtons[6].addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					System.out.println("Button pressed!");
+					Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
+				}
+				
+				@Override
+				public void touchDragged(InputEvent event, float x, float y, int pointer) {
+					answerButtons[6].setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+				}
+			});
+			
+			
+			answerButtons[7].addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					System.out.println("Button pressed!");
+					Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
+				}
+				
+				@Override
+				public void touchDragged(InputEvent event, float x, float y, int pointer) {
+					answerButtons[7].setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+				}
+			});
+			
+			answerButtons[8].addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					System.out.println("Button pressed!");
+					Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
+				}
+				
+				@Override
+				public void touchDragged(InputEvent event, float x, float y, int pointer) {
+					answerButtons[8].setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+				}
+			});
+			
+			answerButtons[9].addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					System.out.println("Button pressed!");
+					Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
+				}
+				
+				@Override
+				public void touchDragged(InputEvent event, float x, float y, int pointer) {
+					answerButtons[9].setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+				}
+			});
+			
+			answerButtons[10].addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					System.out.println("Button pressed!");
+					Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
+				}
+				
+				@Override
+				public void touchDragged(InputEvent event, float x, float y, int pointer) {
+					answerButtons[10].setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+				}
+			});
+			
+			
+			answerButtons[11].addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					System.out.println("Button pressed!");
+					Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
+				}
+				
+				@Override
+				public void touchDragged(InputEvent event, float x, float y, int pointer) {
+					answerButtons[11].setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+				}
+			});
+		}
 }

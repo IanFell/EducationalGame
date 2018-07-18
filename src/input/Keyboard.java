@@ -13,8 +13,12 @@ import tests.Tests;
  */
 public class Keyboard {
 	public void handleInput(Subjects subject) {
-		if(Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+		if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
 			Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
+		}
+		
+		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+			System.exit(0);
 		}
 	}
 }
