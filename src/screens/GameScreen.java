@@ -1,5 +1,8 @@
 package screens;
 
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
@@ -14,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import handlers.SoundHandler;
+import handlers.SubjectHandler;
 import input.InputHandler;
 import subjects.Subjects;
 import tests.Tests;
@@ -38,21 +42,15 @@ public class GameScreen implements Screen {
 	private boolean[] hasSnappedInPlace = new boolean[12];
 
 	private InputHandler inputHandler = new InputHandler();
-	
+
 	private SoundHandler soundHandler = new SoundHandler();
+	
+	private SubjectHandler subjectHandler = new SubjectHandler();
 
 	// Has game screen been initialized?  At launch no.  After launch yes.
 	private boolean gameScreenHasBeenInitialized;
 
 	private Stage stage;
-
-	/**
-	 * Button variables.
-	 */
-	private Texture subjectTexture;
-	private TextureRegion subjectTextureRegion;
-	private TextureRegionDrawable subjectTextureRegionDrawable;
-	private ImageButton subjectLabel;  
 
 	private Texture[] answerTextures                             = new Texture[12];
 	private TextureRegion[] answerTextureRegions                 = new TextureRegion[12];
@@ -82,7 +80,7 @@ public class GameScreen implements Screen {
 			initializeGameScreen();
 			gameScreenHasBeenInitialized = true;
 		}
-		
+
 		inputHandler.handleInput(subject);
 		soundHandler.handleSound(this);
 
@@ -137,19 +135,19 @@ public class GameScreen implements Screen {
 			gridXSnapButtonPosition[i]   += gridXIncrement;
 			gridYSnapButtonPosition[i]   += gridYSnapButtonIncrement;
 			gridXIncrement               += 275;
-			int yIncrement               = 65;
-			gridYIncrement               += yIncrement;
-			gridYSnapButtonIncrement     += yIncrement;
+			gridYIncrement               += 65;
+			gridYSnapButtonIncrement     += 55;
 		}
 		initializeGui();
 		soundHandler.init();
 	}
 
 	private void initializeGui() {
-		subjectTexture               = new Texture(Gdx.files.internal("Question.png"));
-		subjectTextureRegion         = new TextureRegion(subjectTexture);
-		subjectTextureRegionDrawable = new TextureRegionDrawable(subjectTextureRegion);
-		subjectLabel                 = new ImageButton(subjectTextureRegionDrawable); 
+		
+		stage = new Stage(new ScreenViewport()); 
+		Gdx.input.setInputProcessor(stage); //Start taking input from the UI.
+		
+		
 
 		answerTextures[0]  = new Texture(Gdx.files.internal("AnswerOne.png"));
 		answerTextures[1]  = new Texture(Gdx.files.internal("AnswerTwo.png"));
@@ -177,19 +175,6 @@ public class GameScreen implements Screen {
 		answerSnapTextures[10] = new Texture(Gdx.files.internal("AnswerBox11.png"));
 		answerSnapTextures[11] = new Texture(Gdx.files.internal("AnswerBox12.png"));
 
-		stage = new Stage(new ScreenViewport()); 
-		Gdx.input.setInputProcessor(stage); //Start taking input from the UI.
-
-		subjectLabel.setPosition(Gdx.graphics.getWidth() / 2 - subjectLabel.getWidth() / 2, Gdx.graphics.getHeight() - subjectLabel.getHeight() * 1.5f);
-		subjectLabel.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				System.out.println("Subject button pressed!");
-				Tests.outputSubjectQuestionAndAnswers(subject, subject.getCurrentSubject());
-			}
-		});
-		stage.addActor(subjectLabel);
-
 		// PUT ALL ANSWER SNAP STUFF TOGETHER, AS WELL AS EVERTHING ELSE.
 		for (int i = 0; i < answerSnapButtons.length; i++) {
 			answerSnapTextureRegions[i] = new TextureRegion(answerSnapTextures[i]);
@@ -207,6 +192,9 @@ public class GameScreen implements Screen {
 			stage.addActor(answerButtons[i]);  
 		}
 
+		// Shuffle array so answers are not always in the same position.
+		shuffleArray(gridXAnswerButtonPosition);
+
 		answerButtons[0].setX(gridXAnswerButtonPosition[0]);
 		answerButtons[1].setX(gridXAnswerButtonPosition[1]);
 		answerButtons[2].setX(gridXAnswerButtonPosition[2]);
@@ -220,6 +208,8 @@ public class GameScreen implements Screen {
 		answerButtons[10].setX(gridXAnswerButtonPosition[0]);
 		answerButtons[11].setX(gridXAnswerButtonPosition[1]);
 
+		// Shuffle array so answers are not always in the same position.
+		shuffleArray(gridYAnswerButtonPosition);
 		answerButtons[0].setY(gridYAnswerButtonPosition[0]);
 		answerButtons[1].setY(gridYAnswerButtonPosition[1]);
 		answerButtons[2].setY(gridYAnswerButtonPosition[2]);
@@ -233,6 +223,8 @@ public class GameScreen implements Screen {
 		answerButtons[10].setY(gridYAnswerButtonPosition[2]);
 		answerButtons[11].setY(gridYAnswerButtonPosition[3]);
 
+		// Shuffle array so answers are not always in the same position.
+		shuffleArray(gridXSnapButtonPosition);
 		answerSnapButtons[0].setX(gridXSnapButtonPosition[0]);
 		answerSnapButtons[1].setX(gridXSnapButtonPosition[1]);
 		answerSnapButtons[2].setX(gridXSnapButtonPosition[2]);
@@ -246,6 +238,8 @@ public class GameScreen implements Screen {
 		answerSnapButtons[10].setX(gridXSnapButtonPosition[0]);
 		answerSnapButtons[11].setX(gridXSnapButtonPosition[1]);
 
+		// Shuffle array so answers are not always in the same position.
+		shuffleArray(gridYSnapButtonPosition);
 		answerSnapButtons[0].setY(gridYSnapButtonPosition[0]);
 		answerSnapButtons[1].setY(gridYSnapButtonPosition[1]);
 		answerSnapButtons[2].setY(gridYSnapButtonPosition[2]);
@@ -259,7 +253,25 @@ public class GameScreen implements Screen {
 		answerSnapButtons[10].setY(gridYSnapButtonPosition[2]);
 		answerSnapButtons[11].setY(gridYSnapButtonPosition[3]);
 
+		subjectHandler.init(stage, subject);
+		
 		setUpAnswerButtonClickListeners();
+	}
+
+	/**
+	 * Implementing Fisher–Yates shuffle to shuffle given array.
+	 * 
+	 * @param array arrayToShuffle
+	 */
+	private void shuffleArray(float[] arrayToShuffle) { 
+		Random random = ThreadLocalRandom.current();
+		for (int i = arrayToShuffle.length - 1; i > 0; i--) {
+			int index = random.nextInt(i + 1);
+			// Simple swap.
+			float a               = arrayToShuffle[index];
+			arrayToShuffle[index] = arrayToShuffle[i];
+			arrayToShuffle[i]     = a;
+		}
 	}
 
 	@Override
@@ -288,7 +300,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		subjectTexture.dispose();
+		subjectHandler.dispose();
 		for (int i= 0; i < answerTextures.length; i++) {
 			answerTextures[i].dispose();
 			answerSnapTextures[i].dispose();
